@@ -1,17 +1,21 @@
 package com.mindhub.homebanking.models;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
 public class Transaction {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private TransactionType type;
+
     private double amount;
+
     private LocalDateTime date;
+
     private String descripton;
 
     @ManyToOne(fetch = FetchType.EAGER)

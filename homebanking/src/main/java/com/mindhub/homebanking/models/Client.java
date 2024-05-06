@@ -1,17 +1,20 @@
 package com.mindhub.homebanking.models;
 
 import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity //Con esto quiero generar una tabla
 public class Client {
+
     @Id //Indicamos cual va hacer la clave primaria en la tabla de la base de datos
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Con esto generamos el valor
     private Long id;
+
     private String firstName;
+
     private String lastName;
+
     private String email;
 
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)

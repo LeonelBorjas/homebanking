@@ -24,20 +24,20 @@ public class AccountController {
     private AccountRepository accountRepository;
 
     @GetMapping("/")
-    public ResponseEntity<List<AccountDTO>> getAccount(){
-    List<AccountDTO> accounts = accountRepository.findAll().stream().map(AccountDTO::new).collect(toList()); // Busca todas las cuentas
-
-        if (!accounts.isEmpty()) {
-            return new ResponseEntity<>(accounts, HttpStatus.OK);
+    public ResponseEntity<?> getAccount(){
+        List<Account> account = accountRepository.findAll();
+        List<AccountDTO> accountDTOS = account.stream().map(accounts -> new AccountDTO(accounts)).collect(java.util.stream.Collectors.toList());
+        if (!account.isEmpty()) {
+            return new ResponseEntity<>(accountDTOS, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No se encontro la cuenta", HttpStatus.NOT_FOUND);
         }
     }
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDTO> getAccountsById(@PathVariable Long Id){
-        Account account = accountRepository.findById(Id).orElse(null); // Buscar cuenta por ID
+    public ResponseEntity<?> getAccountsById(@PathVariable Long id){
+        Account account = accountRepository.findById(id).orElse(null); // Buscar cuenta por ID
         if (account == null){ // Si no existe, devolver ResponseEntity con el codigo de estado personalizado
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso No encontrado");
         }
 
         AccountDTO accountDTO = new AccountDTO(account); // si existe devolver ResponseEntity con el accountDTO y el codigo de estado OK
