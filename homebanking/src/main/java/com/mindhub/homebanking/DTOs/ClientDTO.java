@@ -48,4 +48,3 @@ public class ClientDTO {
         return accounts;
     }
 }
-//    findAll().stream().map(Client -> new ClientDTO(Client)).collect(toList());
