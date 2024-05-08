@@ -109,6 +109,13 @@ public class HomebankingApplication {
 			clientLoanRepository.save(clientLoanTree);
 			clientLoanRepository.save(clientLoanFort);
 
+			mortgageLoan.getClients();
+			System.out.println(mortgageLoan.getClients());
+
+			clientTwo.getLoans();
+			System.out.println(clientTwo.getLoans());
+
+
 		};
 	}
 

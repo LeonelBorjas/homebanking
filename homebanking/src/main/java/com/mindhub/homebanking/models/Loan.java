@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Loan {
@@ -68,5 +70,27 @@ public class Loan {
     public void addClientLoan(ClientLoan clientLoan) {
         clientLoan.setLoan(this);
         clientLoans.add(clientLoan);
+    }
+
+    public List<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
+
+    public void setClientLoans(List<ClientLoan> clientLoans) {
+        this.clientLoans = clientLoans;
+    }
+
+    public Set<Client> getClients() {
+        return clientLoans.stream().map(clientsLoan -> clientsLoan.getClient()).collect(Collectors.toSet());
+    }
+
+    @Override
+    public String toString() {
+        return "Loan{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", maxAmount=" + maxAmount +
+                ", payments=" + payments +
+                '}';
     }
 }

@@ -1,14 +1,13 @@
 package com.mindhub.homebanking.models;
-
 import jakarta.persistence.*;
-
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity //Con esto quiero generar una tabla
 public class Client {
 
     @Id //Indicamos cual va hacer la clave primaria en la tabla de la base de datos
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //Con esto generamos el valor
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //Con esto generamos el valor automaticamente
     private Long id;
 
     private String firstName;
@@ -90,6 +89,10 @@ public class Client {
     public void addClientLoan(ClientLoan clientLoan) {
         clientLoan.setClient(this);
         clientLoans.add(clientLoan);
+    }
+
+    public List<Loan> getLoans() {
+        return clientLoans.stream().map(clientsLoan -> clientsLoan.getLoan()).toList();
     }
 
     public String toString() {   // hacen que sea visible los datos donde estan guardados los objetos
