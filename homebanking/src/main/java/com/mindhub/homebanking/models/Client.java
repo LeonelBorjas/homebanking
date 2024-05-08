@@ -1,8 +1,8 @@
 package com.mindhub.homebanking.models;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.*;
 
 @Entity //Con esto quiero generar una tabla
 public class Client {
@@ -19,6 +19,9 @@ public class Client {
 
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
+
+    @OneToMany(mappedBy = "client")
+    private List<ClientLoan> clientLoans = new ArrayList<>();
 
 
     public Client(String first, String last, String emaill) {
@@ -70,12 +73,28 @@ public class Client {
         this.email = email;
     }
 
+    public List<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
+
+    public void setClientLoans(List<ClientLoan> clientLoans) {
+        this.clientLoans = clientLoans;
+    }
+
     public void addAccount (Account account){
         account.setClient(this);
         accounts.add(account);
     }
 
-    public String toString() {
+
+    public void addClientLoan(ClientLoan clientLoan) {
+        clientLoan.setClient(this);
+        clientLoans.add(clientLoan);
+    }
+
+    public String toString() {   // hacen que sea visible los datos donde estan guardados los objetos
         return id + " " + firstName + " " + lastName + ", " + email;
     }
+
+
 }
