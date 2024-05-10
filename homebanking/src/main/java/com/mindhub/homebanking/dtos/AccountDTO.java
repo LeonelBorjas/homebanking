@@ -1,4 +1,4 @@
-package com.mindhub.homebanking.DTOs;
+package com.mindhub.homebanking.dtos;
 
 import com.mindhub.homebanking.models.Account;
 
@@ -24,8 +24,8 @@ public class AccountDTO {
         creationDate = account.getCreationDate();
         balance = account.getBalance();
 
-        this.transactions = account.getTransactions().stream()
-                .map(TransactionDTO::new)
+        this.transactions = account.getTransactions().stream() // acedo a los metodos superiores
+                .map(TransactionDTO::new) // devolvue el set del mismo tamaño
                 .collect(Collectors.toSet());
 
     }

@@ -26,7 +26,6 @@ public class HomebankingApplication {
 			Client clientOne = new Client("Melba", "Morel", "melba@mindhub.com");
 			Client clientTwo = new Client("Leonel", "Borjas", "leonelborjas@outlook.es");
 
-
 			LocalDate localDateToday = LocalDate.now();
 			LocalDate localDateTomorrow = localDateToday.plusDays(1);
 

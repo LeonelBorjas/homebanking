@@ -22,12 +22,23 @@ public class Client {
     @OneToMany(mappedBy = "client")
     private List<ClientLoan> clientLoans = new ArrayList<>();
 
+//    @OneToMany(mappedBy = "client")
+//    private Set<Card> cards = new HashSet<>();
+
 
     public Client(String first, String last, String emaill) {
         firstName = first;
         lastName = last;
         email = emaill;
     }
+
+//    public Set<Card> getCards() {
+//        return cards;
+//    }
+//
+//    public void setCards(Set<Card> cards) {
+//        this.cards = cards;
+//    }
 
     public Client() {
     }
@@ -85,11 +96,15 @@ public class Client {
         accounts.add(account);
     }
 
-
     public void addClientLoan(ClientLoan clientLoan) {
         clientLoan.setClient(this);
         clientLoans.add(clientLoan);
     }
+
+//    public void addCard (Card card){
+//        card.setClient(this);
+//        cards.add(card);
+//    }
 
     public List<Loan> getLoans() {
         return clientLoans.stream().map(clientsLoan -> clientsLoan.getLoan()).toList();
@@ -98,6 +113,5 @@ public class Client {
     public String toString() {   // hacen que sea visible los datos donde estan guardados los objetos
         return id + " " + firstName + " " + lastName + ", " + email;
     }
-
 
 }

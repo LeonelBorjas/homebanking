@@ -18,11 +18,11 @@ public class Account {
 
     private double balance;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER) //Muchas cuentas pueden pertenecer a un client, se recupera de forma automatica cuando acceda a la cuenta
     @JoinColumn(name="owner_id")
     private Client client;
 
-    @OneToMany(mappedBy="account", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="account", fetch=FetchType.EAGER) // Muchas transacciones pueden estar asociadas a un cuenta
     private Set<Transaction> transactions = new HashSet<>();
 
     public Account(String numberAccount, LocalDate date, double balanceAccount) {
@@ -87,7 +87,7 @@ public class Account {
         transactions.add(transaction);
     }
 
-    public String toString(){
+    public String toString(){ //Sobre escribe los datos que tiene y no los datos en donde esta
         return  id + " " + number + " " + creationDate + " " + balance;
     }
 
