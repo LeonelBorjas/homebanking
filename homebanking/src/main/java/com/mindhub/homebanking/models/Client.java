@@ -22,8 +22,8 @@ public class Client {
     @OneToMany(mappedBy = "client")
     private List<ClientLoan> clientLoans = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "client")
-//    private Set<Card> cards = new HashSet<>();
+    @OneToMany(mappedBy = "client")
+    private Set<Card> cards = new HashSet<>();
 
 
     public Client(String first, String last, String emaill) {
@@ -32,13 +32,13 @@ public class Client {
         email = emaill;
     }
 
-//    public Set<Card> getCards() {
-//        return cards;
-//    }
-//
-//    public void setCards(Set<Card> cards) {
-//        this.cards = cards;
-//    }
+    public Set<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(Set<Card> cards) {
+        this.cards = cards;
+    }
 
     public Client() {
     }
@@ -101,10 +101,10 @@ public class Client {
         clientLoans.add(clientLoan);
     }
 
-//    public void addCard (Card card){
-//        card.setClient(this);
-//        cards.add(card);
-//    }
+    public void addCard (Card card){
+        card.setClient(this);
+        cards.add(card);
+    }
 
     public List<Loan> getLoans() {
         return clientLoans.stream().map(clientsLoan -> clientsLoan.getLoan()).toList();
