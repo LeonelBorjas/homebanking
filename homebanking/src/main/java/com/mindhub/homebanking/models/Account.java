@@ -83,8 +83,8 @@ public class Account {
     }
 
     public void addTransaction(Transaction transaction){
-        transaction.setAccount(this);
-        transactions.add(transaction);
+        transaction.setAccount(this); //this hace referencia al objeto que llama al metodo addTransaction
+        transactions.add(transaction); // donde se guarda
     }
 
     public String toString(){ //Sobre escribe los datos que tiene y no los datos en donde esta

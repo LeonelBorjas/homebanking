@@ -91,9 +91,9 @@ public class Client {
         this.clientLoans = clientLoans;
     }
 
-    public void addAccount (Account account){
-        account.setClient(this);
-        accounts.add(account);
+    public void addAccount (Account account){ //objeto tipo account
+        account.setClient(this);  // set asignar un cliente
+        this.accounts.add(account);
     }
 
     public void addClientLoan(ClientLoan clientLoan) {

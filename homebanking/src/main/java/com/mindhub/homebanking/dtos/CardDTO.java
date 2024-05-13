@@ -25,7 +25,7 @@ public class CardDTO {
 
     public CardDTO (Card card){
         id = card.getId();
-        cardName = card.getCardName();
+        cardName = card.getClient().getFirstName() + " " + card.getClient().getLastName();
         number = card.getNumber();
         securityCode = card.getSecurityCode();
         since = card.getSince();

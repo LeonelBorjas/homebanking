@@ -1,5 +1,6 @@
 package com.mindhub.homebanking.dtos;
 
+import com.mindhub.homebanking.models.Card;
 import com.mindhub.homebanking.models.Client;
 
 import java.util.Set;
@@ -27,7 +28,7 @@ public class ClientDTO {
         this.lastName = client.getLastName();
         this.email = client.getEmail();
 
-        this.accounts = client.getAccounts().stream()
+        this.accounts = client.getAccounts().stream() // convertir el dato que obtuve a algo que yo pueda mapear
                 .map(AccountDTO::new)
                 .collect(Collectors.toSet());
 
@@ -38,7 +39,7 @@ public class ClientDTO {
 
         this.cards = client.getCards()
                 .stream()
-                .map(cardDTO -> new CardDTO(cardDTO))
+                .map(card -> new CardDTO(card))
                 .collect(Collectors.toSet());
     }
 
