@@ -28,7 +28,8 @@ public class ClientDTO {
         this.lastName = client.getLastName();
         this.email = client.getEmail();
 
-        this.accounts = client.getAccounts().stream() // convertir el dato que obtuve a algo que yo pueda mapear
+        this.accounts = client.getAccounts()
+                .stream() // convertir el dato que obtuve a algo que yo pueda mapear
                 .map(AccountDTO::new)
                 .collect(Collectors.toSet());
 

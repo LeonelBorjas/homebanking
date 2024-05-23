@@ -2,10 +2,13 @@ package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -16,6 +19,8 @@ import static com.fasterxml.jackson.databind.cfg.CoercionInputShape.Array;
 @SpringBootApplication
 public class HomebankingApplication {
 
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
@@ -23,8 +28,8 @@ public class HomebankingApplication {
 	@Bean
 	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return (args) ->{
-			Client clientOne = new Client("Melba", "Morel", "melba@mindhub.com");
-			Client clientTwo = new Client("Leonel", "Borjas", "leonelborjas@outlook.es");
+			Client clientOne = new Client("Melba", "Morel", "melbaMorel@mindhub.com", passwordEncoder.encode("123"));
+			Client clientTwo = new Client("Leonel", "Borjas", "leonelborjas@outlook.es", passwordEncoder.encode("123"));
 
 			LocalDate localDateToday = LocalDate.now();
 			LocalDate localDateTomorrow = localDateToday.plusDays(1);
@@ -85,9 +90,9 @@ public class HomebankingApplication {
 
 			LocalDate localDateYears = localDateToday.plusYears(5);
 
-			Card cardGold = new Card(clientOne, "2525-2414-1753", 554, localDateToday, localDateYears, CardType.CREDIT, CardColor.GOLD);
-			Card cardSilver = new Card(clientTwo, "2040-3040-3020", 532, localDateToday, localDateYears, CardType.CREDIT, CardColor.SILVER);
-			Card cardTitanium = new Card(clientOne, "4040-6060-8080", 400, localDateToday, localDateYears, CardType.CREDIT, CardColor.TITANIUM);
+			Card cardGold = new Card(clientOne, "2525-2414-1753-1919", 51654, localDateToday, localDateYears, CardType.CREDIT, CardColor.GOLD);
+			Card cardSilver = new Card(clientTwo, "2040-3040-3020-0209", 532, localDateToday, localDateYears, CardType.CREDIT, CardColor.SILVER);
+			Card cardTitanium = new Card(clientOne, "4040-6060-8080-0511", 400, localDateToday, localDateYears, CardType.CREDIT, CardColor.TITANIUM);
 
 			clientOne.addCard(cardGold);
 			clientOne.addCard(cardTitanium);

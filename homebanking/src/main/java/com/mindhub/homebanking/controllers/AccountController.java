@@ -6,15 +6,14 @@ import com.mindhub.homebanking.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController // Marca la clase como un controlador REST, lo que significa que responderá a las solicitudes HTTP
 @RequestMapping("/api/accounts") // estamos asociando las peticiones a esta ruta
+@CrossOrigin( origins = "*" )
 public class AccountController {
 
     @Autowired //Cablecito para poder usar el repository
@@ -23,7 +22,10 @@ public class AccountController {
     @GetMapping("/") // mapea un tipo de solicitud HTTPS tipo get a la ruta que especifico
     public ResponseEntity<?> getAccount(){
         List<Account> account = accountRepository.findAll();
-        List<AccountDTO> accountDTOS = account.stream().map(accounts -> new AccountDTO(accounts)).collect(java.util.stream.Collectors.toList());
+        List<AccountDTO> accountDTOS = account
+                .stream()
+                .map(accounts -> new AccountDTO(accounts))
+                .collect(Collectors.toList());
         // Convierte la lista de cuentas en un stream de elementos, Mapea cada acuenta a un objeto AccountDto y para crear una lista que contiene los elementos del stream.
         if (!account.isEmpty()) { // Verifica si la lista de cuentas no está vacía
             return new ResponseEntity<>(accountDTOS, HttpStatus.OK); // devuelve un ResponseEntity con la lista de AccountDTO y el estado HttpStatus.OK

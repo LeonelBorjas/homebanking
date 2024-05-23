@@ -1,4 +1,5 @@
 package com.mindhub.homebanking.models;
+import io.jsonwebtoken.security.Password;
 import jakarta.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +17,8 @@ public class Client {
 
     private String email;
 
+    private String Password;
+
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
 
@@ -26,10 +29,11 @@ public class Client {
     private Set<Card> cards = new HashSet<>();
 
 
-    public Client(String first, String last, String emaill) {
-        firstName = first;
-        lastName = last;
-        email = emaill;
+    public Client(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        Password = password;
     }
 
     public Set<Card> getCards() {
@@ -87,6 +91,14 @@ public class Client {
         return clientLoans;
     }
 
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
+    }
+
     public void setClientLoans(List<ClientLoan> clientLoans) {
         this.clientLoans = clientLoans;
     }
@@ -107,7 +119,9 @@ public class Client {
     }
 
     public List<Loan> getLoans() {
-        return clientLoans.stream().map(clientsLoan -> clientsLoan.getLoan()).toList();
+        return clientLoans.stream()
+                .map(clientsLoan -> clientsLoan.getLoan())
+                .toList();
     }
 
     public String toString() {   // hacen que sea visible los datos donde estan guardados los objetos
