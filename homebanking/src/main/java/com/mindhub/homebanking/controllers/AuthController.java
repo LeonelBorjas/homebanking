@@ -29,7 +29,7 @@ public class AuthController {
     private ClientRepository clientRepository;
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -58,6 +58,16 @@ public class AuthController {
         if (registerDTO.firstName().isBlank()){
             return new ResponseEntity<>("The name field must not be empty", HttpStatus.FORBIDDEN);
         }
+        if (registerDTO.lastName().isBlank()){
+            return new ResponseEntity<>("The name field must not be empty", HttpStatus.FORBIDDEN);
+        }
+        if (registerDTO.email().isBlank()){
+            return new ResponseEntity<>("The email field must not be empty", HttpStatus.FORBIDDEN);
+        }
+        if (registerDTO.password().isBlank()){
+            return new ResponseEntity<>("The password field must not be empty", HttpStatus.FORBIDDEN);
+        }
+
 
         Client client = new Client(
                 registerDTO.firstName(),
