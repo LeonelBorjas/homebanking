@@ -3,6 +3,7 @@ package com.mindhub.homebanking.controllers;
 import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.dtos.LoginDTO;
 import com.mindhub.homebanking.dtos.RegisterDTO;
+import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
@@ -17,6 +18,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+
+import static com.mindhub.homebanking.controllers.AccountController.eightDigits;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -44,9 +49,9 @@ public class AuthController {
     public ResponseEntity<?> login (@RequestBody LoginDTO loginDTO){
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(),loginDTO.password()));
-            final UserDetails userDetails = userDetailsServiceImplem.loadUserByUsername(loginDTO.email());
+            final UserDetails userDetails = userDetailsServiceImplem.loadUserByUsername(loginDTO.email()); // genera el token con las credenciales de usuario
             final String jwt = jwtUtilService.generateToken(userDetails);
-            return ResponseEntity.ok(jwt);
+            return ResponseEntity.ok(jwt); // respuesta ok y esperamos que nos devuelva el token
         }catch (Exception e){
             return new ResponseEntity<>("Email or password invalid", HttpStatus.BAD_REQUEST);
         }
@@ -55,11 +60,15 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register (@RequestBody RegisterDTO registerDTO){
 
+//        if (clientRepository.isEmailDuplicated(registerDTO.email())) {
+//            return new ResponseEntity<>("Email is already on use", HttpStatus.FORBIDDEN);
+//        }
+
         if (registerDTO.firstName().isBlank()){
-            return new ResponseEntity<>("The name field must not be empty", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The firs name  field must not be empty", HttpStatus.FORBIDDEN);
         }
         if (registerDTO.lastName().isBlank()){
-            return new ResponseEntity<>("The name field must not be empty", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The last name field must not be empty", HttpStatus.FORBIDDEN);
         }
         if (registerDTO.email().isBlank()){
             return new ResponseEntity<>("The email field must not be empty", HttpStatus.FORBIDDEN);
@@ -73,13 +82,25 @@ public class AuthController {
                 registerDTO.firstName(),
                 registerDTO.lastName(), registerDTO.email(),
                 passwordEncoder.encode(registerDTO.password()));
+
+        String number;
+        do {
+            number = "VIN-" + eightDigits();
+        } while (accountRepository.findByNumber(number) != null);
+
+        Account account = new Account(number, LocalDate.now(), 0.0);
+        account.setClient(client);
+        client.addAccount(account);
         clientRepository.save(client);
+        accountRepository.save(account);
+
         return new ResponseEntity<>("Client created", HttpStatus.CREATED);
     }
 
-@GetMapping("/current")
-    public ResponseEntity<?> getClient (Authentication authentication){
-        Client client = clientRepository.findByEmail(authentication.getName());
+
+@GetMapping("/current") //obtener ese usuario logeado
+    public ResponseEntity<?> getClient (Authentication authentication){ // ese cliente ya logeado
+        Client client = clientRepository.findByEmail(authentication.getName()); // obtener el nombre de ese ususario ya logeado
         return ResponseEntity.ok(new ClientDTO(client));
 }
 

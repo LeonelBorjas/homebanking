@@ -28,22 +28,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            final String authorizationHeader = request.getHeader("Authorization");
+            final String authorizationHeader = request.getHeader("Authorization"); //obtenemos el header que seria el emcabezado de autorizacion de la peticion
             String userName = null;
             String jwt = null;
 
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 jwt = authorizationHeader.substring(7);
-                userName = jwtUtilService.extractUserName(jwt);
+                userName = jwtUtilService.extractUserName(jwt); //extraemos el nombre del token JWT
             }
 
-            if (userName != null && SecurityContextHolder.getContext().getAuthentication() ==  null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
+            if (userName != null && SecurityContextHolder.getContext().getAuthentication() ==  null) { // si el contexto de seguirdad no tiene una establecida
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName); // para cargar los detalles del usuario con el nombre de usuario extraido del token
                 if (!jwtUtilService.isTokenExpired(jwt)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    // las credenciales son null por que vamos a trabajar en la autenticacion atravez del token
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // vamos a crear y establecer los detalles de autenticacion basados en la la peticion proporcinada
+                    SecurityContextHolder.getContext().setAuthentication(authentication); // vamos a establecer la autenticacion del usuario actual, sirve para gestionar la autenticacion y la autorizacion de los usuarios
                 }
             }
         }
@@ -51,7 +51,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             System.out.println(e.getMessage());
         }
         finally {
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); //usamos el filter que pusimos como parametro para aplicar el metodo, para que coninue con la siguiente cadena de filtros, pasandole la peticion y la respuesta asociada
         }
     }
 }

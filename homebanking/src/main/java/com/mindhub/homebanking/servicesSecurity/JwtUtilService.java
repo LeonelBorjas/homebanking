@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Service // Sera un servicio que cumplira con la generacion del token
+@Service // Sera un servicio que cumplira con la generacion del JWT token
 public class JwtUtilService {
 
     private static final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build(); //Devuelve un token  firmado con la clave proporcionada
@@ -35,13 +35,13 @@ public class JwtUtilService {
 
     private String createToken(Map<String, Object> claims, String username) {
         return Jwts
-                .builder()
+                .builder() // Inicia un objeto del tipo JWT Builder
                 .claims(claims)
                 .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TOKEN))
-                .signWith(SECRET_KEY)
-                .compact();
+                .issuedAt(new Date(System.currentTimeMillis())) // fecha de emision del token
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TOKEN)) // fecha de expiracion
+                .signWith(SECRET_KEY) // firmamos el token con la SECRET KEY
+                .compact(); // con este metodo construimos el token JWT Completo y lo devolvemos como un string
     }
 
     public String generateToken(UserDetails userDetails){ //utiliza como parametro el User que se declara en UserDetails
