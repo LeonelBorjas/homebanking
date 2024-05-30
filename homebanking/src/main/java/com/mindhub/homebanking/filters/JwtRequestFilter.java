@@ -17,8 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
-public class JwtRequestFilter extends OncePerRequestFilter {
+@Component // marca la clase como un componente de spring, entonces lo administrara como un bean
+public class JwtRequestFilter extends OncePerRequestFilter { // Lo que permite el Onceper es que se ejecute la clase con lo que contenga por cada solicitud HTTP
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -32,15 +32,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String userName = null;
             String jwt = null;
 
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) { //No es nulo y comienza con
                 jwt = authorizationHeader.substring(7);
                 userName = jwtUtilService.extractUserName(jwt); //extraemos el nombre del token JWT
             }
 
-            if (userName != null && SecurityContextHolder.getContext().getAuthentication() ==  null) { // si el contexto de seguirdad no tiene una establecida
+            if (userName != null && SecurityContextHolder.getContext().getAuthentication() ==  null) { // si el contexto de seguirdad no tiene una autenticacion establecida
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName); // para cargar los detalles del usuario con el nombre de usuario extraido del token
-                if (!jwtUtilService.isTokenExpired(jwt)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                if (!jwtUtilService.isTokenExpired(jwt)) { //si el token no esta expirado
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
                     // las credenciales son null por que vamos a trabajar en la autenticacion atravez del token
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // vamos a crear y establecer los detalles de autenticacion basados en la la peticion proporcinada
                     SecurityContextHolder.getContext().setAuthentication(authentication); // vamos a establecer la autenticacion del usuario actual, sirve para gestionar la autenticacion y la autorizacion de los usuarios

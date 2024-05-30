@@ -28,23 +28,24 @@ public class WebConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{ //Crea la seguridad por nosotros
 
         httpSecurity
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource)) // recibimos la configuracion de cors que hicimos previamente
                 .csrf(AbstractHttpConfigurer::disable) //cros site request forshare impide ataques de formulario, genera un token unico a cada formulario que tenemos en nuestra aplicacion
-                .httpBasic(AbstractHttpConfigurer::disable) // Autenticacion basica pero no es segura por que las credenciales viajan sin cifrar
+                .httpBasic(AbstractHttpConfigurer::disable) // Autenticacion basica que nos provee Spring Security pero no es segura por que las credenciales viajan sin cifrar
                 .formLogin(AbstractHttpConfigurer::disable) //no usamos formulario de login
 
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(
                         HeadersConfigurer.FrameOptionsConfig::disable)) // Se desabilita para poder consumir apis de terceros en este caso el h2Console que puede intentar cargarse como si fuera un iframe
 
-                .authorizeHttpRequests(authorize -> // Especifica que tipo de solicitudes voy a recibir a mi app
+                .authorizeHttpRequests(authorize -> // request  se encarga de especificar el método http autorizar y su ruta
                         authorize
                                 .requestMatchers("/api/auth/login","/api/auth/register","/h2-console/**").permitAll()
                                 .requestMatchers("/api/clients/current/accounts").hasRole("CLIENT")
+                                .requestMatchers("/api/clients/current/create-card").hasRole("CLIENT")
                                 .requestMatchers("/api/clients/").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
 
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // añade el filtro en especifico
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // agregamos el jwtRequestFilter antes del filter que tendriamos por defecto
                 .sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) //Desabilitamos el uso de sesiones, por que lo manejaremos con autencicacion atravez de token
                 ); //STATELESS POR QUE NO LA UTILIZAREMOS
         return httpSecurity.build(); // Construimos la configuracion de la cadena de seguridad

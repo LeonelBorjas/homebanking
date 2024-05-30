@@ -44,15 +44,28 @@ public class AccountController {
         }
     }
     @GetMapping("/accounts/{id}")
-    public ResponseEntity<?> getAccountsById(@PathVariable Long id){
-        Account account = accountRepository.findById(id).orElse(null); // Buscar cuenta por ID
-        if (account == null){ // Si no existe, devolver ResponseEntity con el codigo de estado personalizado
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso No encontrado");
+    public ResponseEntity<?> getAccountsById(@PathVariable Long id, Authentication authentication) {
+        // Obtener el email del cliente autenticado
+        String authenticatedEmail = authentication.getName();
+
+        // Buscar la cuenta por ID
+        Account account = accountRepository.findById(id).orElse(null);
+        if (account == null) {
+            // Si la cuenta no existe, devolver 404 Not Found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso no encontrado");
         }
 
-        AccountDTO accountDTO = new AccountDTO(account); // si existe devolver ResponseEntity con el accountDTO y el codigo de estado OK
+        // Verificar si la cuenta pertenece al cliente autenticado
+        if (!account.getClient().getEmail().equals(authenticatedEmail)) {
+            // Si la cuenta no pertenece al cliente autenticado, devolver 403 Forbidden
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acceso denegado");
+        }
+
+        // Si la cuenta existe y pertenece al cliente autenticado, devolver la cuenta
+        AccountDTO accountDTO = new AccountDTO(account);
         return new ResponseEntity<>(accountDTO, HttpStatus.OK);
     }
+
 
     @PostMapping("/clients/current/accounts")
     public ResponseEntity<String> createAccount(Authentication authentication){

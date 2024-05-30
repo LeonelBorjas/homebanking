@@ -48,7 +48,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody LoginDTO loginDTO){
         try{
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(),loginDTO.password()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(),loginDTO.password())); // usa un autenticaction provaider que genera un usedetails usando el userdetails que yo le paso
             final UserDetails userDetails = userDetailsServiceImplem.loadUserByUsername(loginDTO.email()); // genera el token con las credenciales de usuario
             final String jwt = jwtUtilService.generateToken(userDetails);
             return ResponseEntity.ok(jwt); // respuesta ok y esperamos que nos devuelva el token
@@ -60,9 +60,9 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register (@RequestBody RegisterDTO registerDTO){
 
-//        if (clientRepository.isEmailDuplicated(registerDTO.email())) {
-//            return new ResponseEntity<>("Email is already on use", HttpStatus.FORBIDDEN);
-//        }
+        if (clientRepository.findByEmail(registerDTO.email()) != null) {
+            return new ResponseEntity<>("Email is already registered", HttpStatus.FORBIDDEN);
+        }
 
         if (registerDTO.firstName().isBlank()){
             return new ResponseEntity<>("The firs name  field must not be empty", HttpStatus.FORBIDDEN);
@@ -103,11 +103,5 @@ public class AuthController {
         Client client = clientRepository.findByEmail(authentication.getName()); // obtener el nombre de ese ususario ya logeado
         return ResponseEntity.ok(new ClientDTO(client));
 }
-
-
-
-
-
-
 
 }
