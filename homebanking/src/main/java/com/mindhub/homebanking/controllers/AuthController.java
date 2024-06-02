@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
-import static com.mindhub.homebanking.controllers.AccountController.eightDigits;
+import static com.mindhub.homebanking.services.Implement.AccountServiceImp.eightDigits;
+
 
 @RestController
 @RequestMapping("/api/auth")
