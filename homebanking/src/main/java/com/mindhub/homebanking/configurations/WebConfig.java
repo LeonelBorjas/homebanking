@@ -41,6 +41,7 @@ public class WebConfig {
                                 .requestMatchers("/api/auth/login","/api/auth/register","/h2-console/**").permitAll()
                                 .requestMatchers("/api/clients/current/accounts").hasRole("CLIENT")
                                 .requestMatchers("/api/clients/current/create-card").hasRole("CLIENT")
+                                .requestMatchers("/api/loans", "/api/loan/application").hasRole("CLIENT")
                                 .requestMatchers("/api/clients/").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
