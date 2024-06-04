@@ -36,6 +36,7 @@ public class Client {
         this.lastName = lastName;
         this.email = email;
         Password = password;
+        this.setAdmin(email);
     }
 
     public Set<Card> getCards() {
@@ -93,8 +94,12 @@ public class Client {
         return admin;
     }
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
+    public void setAdmin(String email) {
+        if (email!= null && email.contains("@mindhub.com")) {
+            this.admin = true;
+        } else {
+            this.admin = false;
+        }
     }
 
     public void createAdmin() {
