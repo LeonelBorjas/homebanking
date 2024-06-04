@@ -23,10 +23,17 @@ public class UserDetailsServiceImplem implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
 
+        String rol = "";
+        if (client.isAdmin()){
+            rol = "ADMIN";
+        } else {
+            rol = "CLIENT";
+        }
+
         return User   // usuario que se guardara en el contexHolder
                 .withUsername(username) //email
                 .password(client.getPassword()) // del cliente obtengo el password
-                .roles("CLIENT") // se le da el rol de client
+                .roles(rol)
                 .build();
     }
 }

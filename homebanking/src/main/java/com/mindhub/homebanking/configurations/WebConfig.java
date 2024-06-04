@@ -43,7 +43,7 @@ public class WebConfig {
                                 .requestMatchers("/api/clients/current/accounts").hasRole("CLIENT")
                                 .requestMatchers("/api/clients/current/create-card").hasRole("CLIENT")
                                 .requestMatchers("/api/loans", "/api/loan/application").hasRole("CLIENT")
-                                .requestMatchers("/api/clients/**").hasRole("ADMIN")
+                                .requestMatchers("/api/clients/**", "/api/accounts/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
 

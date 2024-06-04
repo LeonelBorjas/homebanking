@@ -19,7 +19,7 @@ public class Client {
 
     private String Password;
 
-
+    private boolean admin = false;
 
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
@@ -87,6 +87,18 @@ public class Client {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public void createAdmin() {
+        this.admin = true;
     }
 
     public List<ClientLoan> getClientLoans() {
