@@ -43,7 +43,6 @@ public class AccountController {
         return accountService.getAccountsById(id, authentication);
     }
 
-
     @PostMapping("/clients/current/accounts")
     public ResponseEntity<String> createAccount(Authentication authentication){
         return accountService.createAccount(authentication);

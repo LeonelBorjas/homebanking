@@ -39,6 +39,7 @@ public class WebConfig {
                 .authorizeHttpRequests(authorize -> // request  se encarga de especificar el método http autorizar y su ruta
                         authorize
                                 .requestMatchers("/api/auth/login","/api/auth/register","/h2-console/**").permitAll()
+                                .requestMatchers("/api/accounts").hasRole("CLIENT")
                                 .requestMatchers("/api/clients/current/accounts").hasRole("CLIENT")
                                 .requestMatchers("/api/clients/current/create-card").hasRole("CLIENT")
                                 .requestMatchers("/api/loans", "/api/loan/application").hasRole("CLIENT")
