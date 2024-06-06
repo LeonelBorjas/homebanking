@@ -7,6 +7,7 @@ import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 
 import com.mindhub.homebanking.services.AccountService;
+import com.mindhub.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,33 +20,61 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static com.mindhub.homebanking.services.Implement.AccountServiceImp.eightDigits;
+
 @RestController // Marca la clase como un controlador REST, lo que significa que responderá a las solicitudes HTTP
-@RequestMapping("/api") // estamos asociando las peticiones a esta ruta
+@RequestMapping("/api/clients") // estamos asociando las peticiones a esta ruta
 @CrossOrigin( origins = "*" )
 public class AccountController {
-
-    @Autowired //Cablecito para poder usar el repository
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private ClientRepository clientRepository;
 
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private ClientService  clientService;
+
     @GetMapping("/accounts") // mapea un tipo de solicitud HTTPS tipo get a la ruta que especifico
-    public ResponseEntity<?> getAccount(){
-        return accountService.getAccount();
+    public List<AccountDTO> getAllAccounts(){
+        return accountService.getAllAccounts();
     }
 
     @GetMapping("/accounts/{id}")
-    public ResponseEntity<?> getAccountsById(@PathVariable Long id, Authentication authentication) {
-        return accountService.getAccountsById(id, authentication);
+    public ResponseEntity<Object> getAccount(@PathVariable Long id, Authentication authentication){
+
+        Client client = clientService.getAuthClient(authentication.getName());
+
+        Account account = accountService.findByClientAndId(client, id);
+
+        if (account != null) {
+            AccountDTO accountDTO = accountService.getAccountById(id);
+            return new ResponseEntity<>(accountDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Account not found", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/clients/current/accounts")
+
+    @PostMapping("/current/account")
     public ResponseEntity<String> createAccount(Authentication authentication){
-        return accountService.createAccount(authentication);
-    }
+        Client client = clientService.getClientByEmail(authentication.getName());
 
+        if(client.getAccounts().size()>=3){
+            return new ResponseEntity<>("You reach the maximum limit of 3 accounts per client",HttpStatus.FORBIDDEN);
+        }
+        String number;
+        do {
+            number = "VIN-" + eightDigits();
+        } while (accountService.findByNumber(number) != null);
+
+        Account account = new Account(number, LocalDate.now(), 0.0);
+        account.setClient(client);
+        client.addAccount(account);
+
+        clientService.saveClient(client);
+        accountService.saveAccount(account);
+
+
+        return new ResponseEntity<>("Client account created", HttpStatus.CREATED);
+
+}
 }

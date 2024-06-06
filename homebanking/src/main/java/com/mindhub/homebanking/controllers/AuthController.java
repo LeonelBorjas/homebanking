@@ -7,6 +7,8 @@ import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.services.AccountService;
+import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.servicesSecurity.JwtUtilService;
 import com.mindhub.homebanking.servicesSecurity.UserDetailsServiceImplem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +34,10 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -61,7 +63,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register (@RequestBody RegisterDTO registerDTO){
 
-        if (clientRepository.findByEmail(registerDTO.email()) != null) {
+        if (clientService.getClientByEmail(registerDTO.email()) != null) {
             return new ResponseEntity<>("Email is already registered", HttpStatus.FORBIDDEN);
         }
 
@@ -87,13 +89,13 @@ public class AuthController {
         String number;
         do {
             number = "VIN-" + eightDigits();
-        } while (accountRepository.findByNumber(number) != null);
+        } while (accountService.findByNumber(number) != null);
 
         Account account = new Account(number, LocalDate.now(), 0.0);
         account.setClient(client);
         client.addAccount(account);
-        clientRepository.save(client);
-        accountRepository.save(account);
+        clientService.saveClient(client);
+        accountService.saveAccount(account);
 
         return new ResponseEntity<>("Client created", HttpStatus.CREATED);
     }
@@ -101,7 +103,7 @@ public class AuthController {
 
 @GetMapping("/current") //obtener ese usuario logeado
     public ResponseEntity<?> getClient (Authentication authentication){ // ese cliente ya logeado
-        Client client = clientRepository.findByEmail(authentication.getName()); // obtener el nombre de ese ususario ya logeado
+        Client client = clientService.getClientByEmail(authentication.getName()); // obtener el nombre de ese ususario ya logeado
         return ResponseEntity.ok(new ClientDTO(client));
 }
 

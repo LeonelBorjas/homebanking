@@ -20,19 +20,27 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/api/clients")  // estamos asociando las peticiones a esta ruta
 public class ClientController {
 
-    @Autowired // Inyección de dependencia
-    private ClientRepository clientRepository; // Tira el cablecito para poder usar el clientRepository en el Servlet
-
     @Autowired
     private ClientService clientService;
 
     @GetMapping("/") // Anotacion que mapea un tipo de solicitud HTTPS tipo get a la ruta que especifico
     public ResponseEntity<?> getAllClients(){
-        return clientService.getClients();
+        List<Client> clients = clientService.getListClients();
+        List<ClientDTO> clientDTOS = clientService.getListClientsDTO();
+        if (!clients.isEmpty()) {
+            return new ResponseEntity<>(clientDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("The client was not found", HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getClientsById(@PathVariable Long id){
-        return clientService.getClientsById(id);
+        Client client = clientService.getClientById(id);
+        if (client == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+        }
+        ClientDTO clientDTO =clientService.getClientDTO(client);
+        return new ResponseEntity<>(clientDTO, HttpStatus.OK);
     }
 }

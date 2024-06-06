@@ -25,69 +25,35 @@ public class AccountServiceImp implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private ClientRepository clientRepository;
-
     @Override
-    public ResponseEntity<?> getAccount(){
-        List<Account> account = accountRepository.findAll();
-        List<AccountDTO> accountDTOS = account
-                .stream()
-                .map(accounts -> new AccountDTO(accounts))
-                .collect(Collectors.toList());
-        // Convierte la lista de cuentas en un stream de elementos, Mapea cada acuenta a un objeto AccountDto y para crear una lista que contiene los elementos del stream.
-        if (!account.isEmpty()) { // Verifica si la lista de cuentas no está vacía
-            return new ResponseEntity<>(accountDTOS, HttpStatus.OK); // devuelve un ResponseEntity con la lista de AccountDTO y el estado HttpStatus.OK
-        } else {
-            return new ResponseEntity<>("No se encontro la cuenta", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> getAccountsById(@PathVariable Long id, Authentication authentication) {
-        // Obtener el email del cliente autenticado
-        String authenticatedEmail = authentication.getName();
-
-        // Buscar la cuenta por ID
-        Account account = accountRepository.findById(id).orElse(null);
-        if (account == null) {
-            // Si la cuenta no existe, devolver 404 Not Found
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso no encontrado");
-        }
-
-        // Verificar si la cuenta pertenece al cliente autenticado
-        if (!account.getClient().getEmail().equals(authenticatedEmail)) {
-            // Si la cuenta no pertenece al cliente autenticado, devolver 403 Forbidden
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acceso denegado");
-        }
-
-        // Si la cuenta existe y pertenece al cliente autenticado, devolver la cuenta
-        AccountDTO accountDTO = new AccountDTO(account);
-        return new ResponseEntity<>(accountDTO, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<String> createAccount(Authentication authentication){
-        Client client = clientRepository.findByEmail(authentication.getName());
-
-        if(client.getAccounts().size()>=3){
-            return new ResponseEntity<>("You reach the maximum limit of 3 accounts per client",HttpStatus.FORBIDDEN);
-        }
-        String number;
-        do {
-            number = "VIN-" + eightDigits();
-        } while (accountRepository.findByNumber(number) != null);
-
-        Account account = new Account(number, LocalDate.now(), 0.0);
-        account.setClient(client);
-        client.addAccount(account);
-
-        clientRepository.save(client);
+    public void saveAccount(Account account) {
         accountRepository.save(account);
-
-
-        return new ResponseEntity<>("Client account created", HttpStatus.CREATED);
     }
+
+    @Override
+    public List<AccountDTO> getAllAccounts() {
+        return accountRepository.findAll() //busco todos los clientes en mi repositorio
+                .stream()// convierto la lista en un Stream para poder usar operaciones intermedias (map, filter, sort, etc)
+                // o terminales (count, collect, forEach, etc)
+                .map(AccountDTO::new) // transformo cada client en un objeto DTO
+                .collect(Collectors.toList()); //recopilo todos los objetos DTO y los transforma a una lista.
+    }
+
+    @Override
+    public AccountDTO getAccountById(Long id) {
+        return accountRepository.findById(id).map(AccountDTO::new).orElse(null); // aca vamos a buscar por ID pero nos devuelve o un cliente o NULL
+    }
+
+    @Override
+    public Account findByClientAndId(Client client, Long id){
+        return accountRepository.findByClientAndId(client,id);
+    }
+
+    @Override
+    public Account findByNumber(String number) {
+        return accountRepository.findByNumber(number);
+    }
+
 
     public static String eightDigits() {
         Random random = new Random();
