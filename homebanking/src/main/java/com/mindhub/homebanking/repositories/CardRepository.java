@@ -12,4 +12,7 @@ import java.util.List;
 public interface CardRepository extends JpaRepository <Card, Long> {
 
     List<Card> findByClient(Client client);
+
+    boolean existsByNumber (String cardNumber);
+
 }

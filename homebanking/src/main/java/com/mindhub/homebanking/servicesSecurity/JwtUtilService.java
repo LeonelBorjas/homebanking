@@ -22,7 +22,7 @@ public class JwtUtilService {
         return Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload(); // un objeto signed JWT que contenga las claims firmadas
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsTFunction) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsTFunction) { // extrae un claim
         final Claims claims = extractAllClaims(token); // aca tenemos todos los clains del token
         return claimsTFunction.apply(claims); // nos retorna mediante la claimsFunction un claim en particular que le pasemos como parametro
     }

@@ -119,16 +119,4 @@ public class Card {
         this.client = client;
     }
 
-
-//    @Override
-//    public String toString() {
-//        return "Card{" +
-//                "id=" + id +
-//                ", number='" + number + '\'' +
-//                ", securityCode=" + securityCode +
-//                ", from=" + from +
-//                ", until=" + until +
-//                ", client=" + client +
-//                '}';
-//    }
 }

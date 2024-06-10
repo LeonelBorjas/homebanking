@@ -1,12 +1,8 @@
 package com.mindhub.homebanking.controllers;
-import com.mindhub.homebanking.dtos.TransactionDTO;
-import com.mindhub.homebanking.dtos.TransactionsDTO;
+import com.mindhub.homebanking.dtos.requestBody.TransactionsDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Transaction;
 import com.mindhub.homebanking.models.TransactionType;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
-import com.mindhub.homebanking.repositories.TransactionRepository;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.services.TransactionService;
@@ -18,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -62,7 +56,7 @@ public class TransactionController {
             return new ResponseEntity<>("Target account does not exists.", HttpStatus.FORBIDDEN);
         }
 
-        if(!sourceAccount.getClient().getEmail().equals(authentication.getName())){
+        if(!sourceAccount.getClient().getEmail().equals(authentication.getName())){ //Valida que el cliente autenticado sea el propietario de la cuenta
             return new ResponseEntity<>("Source account does not belong to an authenticated client.", HttpStatus.FORBIDDEN);
         }
 

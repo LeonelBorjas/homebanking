@@ -1,12 +1,10 @@
 package com.mindhub.homebanking.controllers;
 
 import com.mindhub.homebanking.dtos.ClientDTO;
-import com.mindhub.homebanking.dtos.LoginDTO;
-import com.mindhub.homebanking.dtos.RegisterDTO;
+import com.mindhub.homebanking.dtos.requestBody.LoginDTO;
+import com.mindhub.homebanking.dtos.requestBody.RegisterDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.servicesSecurity.JwtUtilService;
@@ -52,8 +50,8 @@ public class AuthController {
     public ResponseEntity<?> login (@RequestBody LoginDTO loginDTO){
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(),loginDTO.password())); // usa un autenticaction provaider que genera un usedetails usando el userdetails que yo le paso
-            final UserDetails userDetails = userDetailsServiceImplem.loadUserByUsername(loginDTO.email()); // genera el token con las credenciales de usuario
-            final String jwt = jwtUtilService.generateToken(userDetails);
+            final UserDetails userDetails = userDetailsServiceImplem.loadUserByUsername(loginDTO.email()); // carga los detalles de usario
+            final String jwt = jwtUtilService.generateToken(userDetails); //genera el token
             return ResponseEntity.ok(jwt); // respuesta ok y esperamos que nos devuelva el token
         }catch (Exception e){
             return new ResponseEntity<>("Email or password invalid", HttpStatus.BAD_REQUEST);
