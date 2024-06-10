@@ -1,6 +1,6 @@
 package com.mindhub.homebanking.controllers;
 
-import com.mindhub.homebanking.Utils.NumberAccount;
+import com.mindhub.homebanking.Utils.NumberAccountCard;
 import com.mindhub.homebanking.dtos.CardDTO;
 import com.mindhub.homebanking.dtos.requestBody.CardsDTO;
 import com.mindhub.homebanking.models.Card;
@@ -78,7 +78,7 @@ public class CardController {
 
         String cardNumber; //generar el numero de la tarjeta
         do {
-            cardNumber = NumberAccount.generateRandomCardNumber(); //generar el numero de la tarjeta
+            cardNumber = NumberAccountCard.generateRandomCardNumber(); //generar el numero de la tarjeta
 
         } while (cardService.existsByNumber(cardNumber));
 

@@ -50,7 +50,7 @@ public class AuthController {
     public ResponseEntity<?> login (@RequestBody LoginDTO loginDTO){
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(),loginDTO.password())); // usa un autenticaction provaider que genera un usedetails usando el userdetails que yo le paso
-            final UserDetails userDetails = userDetailsServiceImplem.loadUserByUsername(loginDTO.email()); // carga los detalles de usario
+            final UserDetails userDetails = userDetailsServiceImplem.loadUserByUsername(loginDTO.email()); // carga los detalles de usuario
             final String jwt = jwtUtilService.generateToken(userDetails); //genera el token
             return ResponseEntity.ok(jwt); // respuesta ok y esperamos que nos devuelva el token
         }catch (Exception e){

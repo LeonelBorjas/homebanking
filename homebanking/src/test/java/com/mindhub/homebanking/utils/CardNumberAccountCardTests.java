@@ -10,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
-public class CardNumberAccountTests {
+public class CardNumberAccountCardTests {
     @Test
     public void cardNumberIsCreated() { // Generar un número de tarjeta de 16 dígitos
         String cardNumber = CardUtils.getCardNumber();

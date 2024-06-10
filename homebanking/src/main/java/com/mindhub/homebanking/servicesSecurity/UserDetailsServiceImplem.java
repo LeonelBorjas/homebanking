@@ -10,10 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service //Es un servicio que cumplira un funcion en especial para crear una estancia de nuestro user en la aplicacion
-public class UserDetailsServiceImplem implements UserDetailsService {
+public class UserDetailsServiceImplem implements UserDetailsService { // Interfaz que nos provee spring securty
 
     @Autowired
-    private ClientRepository clientRepository; //Inyectamos el repository para poder usarlo
+    private ClientRepository clientRepository;
 
     @Override //Aca sobreescribiremos este metodo para que sea como nosotros queramos
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -35,5 +35,5 @@ public class UserDetailsServiceImplem implements UserDetailsService {
                 .password(client.getPassword()) // del cliente obtengo el password
                 .roles(rol)
                 .build();
-    }
+    } //Agarramos un cliente y lo ponemos en el contexto de la aplicacion
 }

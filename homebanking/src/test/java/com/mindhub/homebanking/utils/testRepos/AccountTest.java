@@ -1,12 +1,10 @@
 package com.mindhub.homebanking.utils.testRepos;
 
 import com.mindhub.homebanking.models.Account;
-import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import com.mindhub.homebanking.Utils.NumberAccount;
 import static org.hamcrest.Matchers.*;
 import java.time.LocalDate;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -14,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import com.mindhub.homebanking.Utils.NumberAccount;
+import com.mindhub.homebanking.Utils.NumberAccountCard;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -34,7 +32,7 @@ public class AccountTest {
     @Test
     public void accountExistsGreen() {
         //Generamos un número de cuenta aleatorio
-        String accountNumber = NumberAccount.getCardNumber();
+        String accountNumber = NumberAccount.eightDigits();
 
         // Creamos y guardamos una nueva cuenta con ese número, fecha de hoy y saldo inicial de 1000.0
         Account account = new Account(accountNumber, LocalDate.now(), 1000.0);
@@ -49,12 +47,12 @@ public class AccountTest {
 
     @Test
     public void accountNumberIsNotNull() {
-        String accountNumber = NumberAccount.getCardNumber();
+        String accountNumber = NumberAccount.eightDigits();
         assertThat(accountNumber, is(notNullValue()));
     }
     @Test
     public void accountNumberIsCreated() {
-        String accountNumber = NumberAccount.getCardNumber();
+        String accountNumber = NumberAccount.eightDigits();
         assertThat(accountNumber, is(not(emptyOrNullString())));
     }
 }
