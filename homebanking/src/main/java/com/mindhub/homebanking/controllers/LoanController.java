@@ -3,6 +3,7 @@ package com.mindhub.homebanking.controllers;
 import com.mindhub.homebanking.dtos.requestBody.LoanApplicationDTO;
 import com.mindhub.homebanking.dtos.LoanDTO;
 import com.mindhub.homebanking.models.*;
+import com.mindhub.homebanking.repositories.ClientLoanRepository;
 import com.mindhub.homebanking.repositories.TransactionRepository;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
@@ -19,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class LoanController {
 
     @Autowired
@@ -33,6 +33,10 @@ public class LoanController {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Autowired
+    private ClientLoanRepository clientLoanRepository;
+
 
 
 
@@ -101,7 +105,11 @@ public class LoanController {
         // Crear y configurar el nuevo préstamo con el monto y la tasa de interés
         double amountPlusInterest = loanApplicationDTO.amount() + (loanApplicationDTO.amount() * interestRate); // Calcula el monto total del préstamo incluyendo los intereses.
         ClientLoan newClientLoan = new ClientLoan(loanApplicationDTO.payments(), amountPlusInterest);
+        newClientLoan.setLoan(loan);
+        newClientLoan.setClient(client);
         client.addClientLoan(newClientLoan);
+
+        clientLoanRepository.save(newClientLoan);
 
         // Guardar entidades actualizadas
         clientService.saveClient(client);
@@ -115,6 +123,7 @@ public class LoanController {
 
         destinationAccount.setBalance(destinationAccount.getBalance() + loanApplicationDTO.amount()); //Actualiza el saldo de la cuenta de destino sumándole el monto del préstamo.
         accountService.saveAccount(destinationAccount); //Guarda la cuenta de destino
+
 
         return new ResponseEntity<>("Loan created and credited to destination account", HttpStatus.CREATED);
     }

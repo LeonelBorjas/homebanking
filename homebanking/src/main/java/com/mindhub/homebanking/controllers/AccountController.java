@@ -38,6 +38,13 @@ public class AccountController {
         return accountService.getAllAccounts();
     }
 
+    //servlet para obtener todas las cuentas de un usuario autenticado
+    @GetMapping("/current/accounts") // mapea un tipo de solicitud HTTPS tipo get a la ruta que especifico
+    public List<AccountDTO> getAuthAccounts(Authentication authentication){
+        Client client = clientService.getAuthClient(authentication.getName());
+        return client.getAccounts().stream().map(AccountDTO::new).collect(Collectors.toList());
+    }
+
     @GetMapping("/accounts/{id}")
     public ResponseEntity<Object> getAccount(@PathVariable Long id, Authentication authentication){
 

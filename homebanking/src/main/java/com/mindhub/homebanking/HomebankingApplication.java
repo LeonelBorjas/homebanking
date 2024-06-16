@@ -34,9 +34,9 @@ public class HomebankingApplication {
 //			LocalDate localDateToday = LocalDate.now();
 //			LocalDate localDateTomorrow = localDateToday.plusDays(1);
 //
-//			Account accountOne = new Account("VIN001", localDateToday, 5000);
-//			Account accountTwo = new Account("VIN002", localDateTomorrow, 7500);
-//			Account accountThree = new Account("VIN003",localDateToday, 40000);
+//			Account accountOne = new Account("VIN-001", localDateToday, 5000);
+//			Account accountTwo = new Account("VIN-002", localDateTomorrow, 7500);
+//			Account accountThree = new Account("VIN-003",localDateToday, 40000);
 //
 //			clientOne.addAccount(accountOne);
 //			clientOne.addAccount(accountTwo);
@@ -90,7 +90,7 @@ public class HomebankingApplication {
 //
 //			LocalDate localDateYears = localDateToday.plusYears(5);
 //
-//			Card cardGold = new Card(clientOne, "2525-2414-1753-1919", 51654, localDateToday, localDateYears, CardType.CREDIT, CardColor.GOLD);
+//			Card cardGold = new Card(clientOne, "2525-2414-1753-1919", 654, localDateToday, localDateYears, CardType.CREDIT, CardColor.GOLD);
 //			Card cardSilver = new Card(clientTwo, "2040-3040-3020-0209", 532, localDateToday, localDateYears, CardType.CREDIT, CardColor.SILVER);
 //			Card cardTitanium = new Card(clientOne, "4040-6060-8080-0511", 400, localDateToday, localDateYears, CardType.CREDIT, CardColor.TITANIUM);
 //
