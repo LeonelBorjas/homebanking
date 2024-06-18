@@ -25,3 +25,4 @@ public class CorsConfig { // Cros origin resorcuse sherin restringe las paginas 
 
 
 }
+// Cambio temporal para prueba
