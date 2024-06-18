@@ -5,6 +5,8 @@
       <module name="com.mindhub.homebanking_" target="17" />
       <module name="com.mindhub.homebanking_.main" target="17" />
       <module name="com.mindhub.homebanking_.test" target="17" />
+      <module name="homebanking.main" target="17" />
+      <module name="homebanking.test" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>
