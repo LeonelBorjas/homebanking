@@ -1,6 +1,6 @@
 FROM gradle:8.5-jdk17-alpine
 
-COPY . .
+COPY ./homebanking .
 
 EXPOSE 8080
 
