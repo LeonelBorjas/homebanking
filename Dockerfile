@@ -6,7 +6,7 @@ COPY ./homebanking .
 
 EXPOSE 8080
 
-RUN /bin/sh -c "gradle build --stacktrace"
+RUN gradle build
 
 
 ENTRYPOINT ["java", "-jar","build/libs/homebanking-0.0.1-SNAPSHOT.jar"]
