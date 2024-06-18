@@ -15,7 +15,7 @@ public class CorsConfig { // Cros origin resorcuse sherin restringe las paginas 
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173", "http://https://dhuebank-8xap.onrender.com"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // setiamos que metodos
         configuration.setAllowedHeaders(List.of("*")); //Lista de todos los headers que nos puedan mandar
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); //Fuente de configuraciones para las rutas
