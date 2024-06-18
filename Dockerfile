@@ -1,9 +1,9 @@
-FROM gradle:8.7-jdk17-alpine
+FROM gradle:8.5-jdk17-alpine
 
 COPY . .
 
-RUN gradle build
-
 EXPOSE 8080
+
+RUN /bin/sh -c "gradle build --debug"
 
 ENTRYPOINT ["java", "-jar","build/libs/homebanking-0.0.1-SNAPSHOT.jar"]
